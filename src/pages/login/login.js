@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const loginPayload = { email, password };
 
         try {
-            const data = await apiPost(ROUTES.LOGIN, loginPayload);
+            const data = await apiPost(ROUTES.USERS.LOGIN, loginPayload);
             localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, data.access_token);
             window.location.href = "dashboard.html";
 

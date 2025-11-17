@@ -1,39 +1,6 @@
 import { STORAGE_KEYS } from "./constant/keys.js";
 import { API_BASE } from "./constant/api_path.js";
 
-// GET Request
-export async function apiGet(url) {
-    const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
-
-    const res = await fetch(API_BASE + url, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? "Bearer " + token : ""
-        }
-    });
-
-    if (!res.ok) throw new Error(await res.text() || "GET Request Failed");
-    return res.json();
-}
-
-// POST Request
-export async function apiPost(url, body) {
-    const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
-
-    const res = await fetch(API_BASE + url, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": token ? "Bearer " + token : ""
-        },
-        body: JSON.stringify(body)
-    });
-
-    if (!res.ok) throw new Error(await res.text() || "POST Request Failed");
-    return res.json();
-}
-
 async function apiRequest(method, url, body = null) {
     const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
 
@@ -49,11 +16,23 @@ async function apiRequest(method, url, body = null) {
         options.body = JSON.stringify(body);
     }
 
-    const res = await fetch(API_BASE + url, options);
+    try {
+        const res = await fetch(API_BASE + url, options);
 
-    if (!res.ok) throw new Error(await res.text() || `${method} Request Failed`);
-    return res.json();
+        if (!res.ok) {
+            const msg = await res.text();
+            throw new Error(msg || `${method} Request Failed`);
+        }
+
+        return await res.json();
+
+    } catch (err) {
+        console.error(`API ERROR (${method} ${url}):`, err.message);
+        throw err;
+    }
 }
 
+export const apiGet = (url) => apiRequest("GET", url);
+export const apiPost = (url, body) => apiRequest("POST", url, body);
 export const apiPut = (url, body) => apiRequest("PUT", url, body);
 export const apiDelete = (url) => apiRequest("DELETE", url);

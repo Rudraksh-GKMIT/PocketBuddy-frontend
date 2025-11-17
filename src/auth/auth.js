@@ -4,8 +4,8 @@ import { ROLES } from "../constant/label.js";
 
 // 1. Check if user is logged in
 export function isLoggedIn() {
-    const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
-    return token !== null && token !== "";
+    const access_token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+    return access_token !== null && access_token !== "";
 }
 
 // 2. Redirect if NOT logged in
@@ -22,10 +22,16 @@ export function logout() {
 }
 
 // 4. Decode JWT (header.payload.signature)
-function parseJwt(token) {
+function parseJwt(access_token) {
     try {
-        const payload = token.split(".")[1];
-        const decoded = atob(payload.replace(/-/g, "+").replace(/_/g, "/"));
+        const payload = access_token.split(".")[1];
+        const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
+        const decoded = decodeURIComponent(
+            atob(base64)
+                .split("")
+                .map(c => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+                .join("")
+        );
         return JSON.parse(decoded);
     } catch (e) {
         console.error("Invalid JWT:", e);
@@ -33,46 +39,45 @@ function parseJwt(token) {
     }
 }
 
+
 // 5. Get current logged-in user
 export function getCurrentUser() {
-    const raw = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
-    if (!raw) return null;
+    const accessToken = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+    if (!accessToken) return null;
 
-    return parseJwt(raw);
+    return parseJwt(accessToken);
 }
 
-
 // 6. Render navbar based on user role
+function getNavbarHTML(role) {
+
+    let html = `
+        <a href="../dashboard/dashboard.html" class="btn btn-light me-2">Dashboard</a>
+        <a href="../expense/add-expense.html" class="btn btn-light me-2">Add Expense</a>
+        <a href="../expense/expenses.html" class="btn btn-light me-2">My Expenses</a>
+    `;
+    if (role === ROLES.ADMIN) {
+        html += `
+            <a href="../admin-members/admin-members.html" class="btn btn-warning me-2">Members</a>
+            <a href="../family-summary/family-summary.html" class="btn btn-warning me-2">Family Summary</a>
+            <a href="../family-expenses/family-expenses.html" class="btn btn-warning me-2">All Expenses</a>
+        `;
+    }
+    // logout button
+    html += `<button id="logoutBtn" class="btn btn-danger">Logout</button>`;
+    return html;
+}
+
 export function renderNavbar() {
     const user = getCurrentUser();
     const nav = document.getElementById("navLinks");
 
     if (!nav || !user) return;
 
-    if (user.role === ROLES.ADMIN) {
-        nav.innerHTML = `
-            <a href="dashboard.html" class="btn btn-light me-2">Dashboard</a>
-            <a href="add-expense.html" class="btn btn-light me-2">Add Expense</a>
-            <a href="expenses.html" class="btn btn-light me-2">My Expenses</a>
+    nav.innerHTML = getNavbarHTML(user.role);
 
-            <a href="admin-members.html" class="btn btn-warning me-2">Members</a>
-            <a href="family-summary.html" class="btn btn-warning me-2">Family Summary</a>
-            <a href="family-expenses.html" class="btn btn-warning me-2">All Expenses</a>
-
-            <button id="logoutBtn" class="btn btn-danger">Logout</button>
-        `;
-    } else {
-        nav.innerHTML = `
-            <a href="dashboard.html" class="btn btn-light me-2">Dashboard</a>
-            <a href="add-expense.html" class="btn btn-light me-2">Add Expense</a>
-            <a href="expenses.html" class="btn btn-light me-2">My Expenses</a>
-            <button id="logoutBtn" class="btn btn-danger">Logout</button>
-        `;
-    }
-
-    // Attach logout handler
-    const btn = document.getElementById("logoutBtn");
-    if (btn) btn.addEventListener("click", logout);
+    const logoutBtn = document.getElementById("logoutBtn");
+    if (logoutBtn) logoutBtn.addEventListener("click", logout);
 }
 
 // 7. Auto-render navbar on page load

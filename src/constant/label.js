@@ -7,8 +7,16 @@ export const UI_TEXTS = {
     
 };
 export const keywords = {
+    NAME : "name",
     EMAIL: "email",
     PASSWORD: "password",
     LOGIN_FORM: "loginForm",
     ERROR_BOX: "errorBox",
+    FAMILY_NAME : "familyName",
+    REGISTER_FORM : "registerForm"
+};
+
+export const ROLES ={
+    ADMIN : "admin",
+    MEMBER : "member"
 };
