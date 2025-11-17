@@ -1,6 +1,10 @@
-document.addEventListener("DOMContentLoaded", () => { // this ensure my script runs only after all the html elements are created
+document.addEventListener("DOMContentLoaded", () => {
 
-    // If already logged in go to dashboard
+    // Load static text from content.js
+    document.getElementById("loginTitle").innerText = UI_TEXTS.login.title;
+    document.getElementById("noAccountText").innerText = UI_TEXTS.login.noAccount + " ";
+    document.getElementById("registerText").innerText = UI_TEXTS.login.register;
+
     if (isLoggedIn()) {
         window.location.href = "dashboard.html";
         return;
@@ -10,15 +14,17 @@ document.addEventListener("DOMContentLoaded", () => { // this ensure my script r
     const errorBox = document.getElementById("errorBox");
 
     form.addEventListener("submit", async (e) => {
-        e.preventDefault(); // prevent page to get reload 
+        e.preventDefault();
 
         errorBox.classList.add("d-none");
 
         const email = document.getElementById("email").value.trim();
         const password = document.getElementById("password").value.trim();
 
+        const loginPayload = { email, password };
+
         try {
-            const data = await apiPost("/users/login", { email, password });
+            const data = await apiPost("/users/login", loginPayload);
             localStorage.setItem("token", data.access_token);
             window.location.href = "dashboard.html";
 
