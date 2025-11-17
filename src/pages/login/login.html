@@ -9,18 +9,19 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- JS Files -->
-    <script defer src="../js/api.js"></script>
-    <script defer src="../js/auth.js"></script>
-    <script defer src="../js/login.js"></script>
+    <script defer src="src/api.js"></script>
+    <script defer src="src/auth/auth.js"></script>
+    <script defer src="src/pages/login/login.js"></script>
 </head>
 
-<body class="bg-light"> <!-- This set whole background colour to light grey -->
+<body class="bg-light"> 
 
-    <div class="container mt-5"> <!-- This is a main caintainer with center content and top margin-top -->
-        <div class="col-md-4 mx-auto">  <!-- This is a box of 4/12 width with center horizontally -->
+    <div class="container mt-5"> 
+        <div class="col-md-4 mx-auto"> 
 
-            <div class="card shadow-sm"><!-- This create a wite box with border and padding with small shadow -->
-                 <div class="card-body">
+            <div class="card shadow-sm">
+                <div class="card-body"> 
+
                     <h3 class="text-center mb-4">Login</h3>
 
                     <div id="errorBox" class="alert alert-danger d-none"></div>
@@ -37,7 +38,13 @@
                             <input type="password" id="password" class="form-control" required>
                         </div>
 
+                        <button class="btn btn-primary w-100 mt-3">Login</button>
                     </form>
+
+                    <p class="mt-3 text-center">
+                        Don't have an account? <a href="register.html">Register</a>
+                    </p>
+
                 </div>
             </div>
 
