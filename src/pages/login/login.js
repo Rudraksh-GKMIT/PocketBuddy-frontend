@@ -1,3 +1,7 @@
+import { ROUTES } from "../../constant/api_path.js";
+import { UI_TEXTS } from "../../constant/label.js";
+import { isLoggedIn } from "../../auth/auth.js";
+
 document.addEventListener("DOMContentLoaded", () => {
 
     // Load static text from content.js
@@ -18,14 +22,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         errorBox.classList.add("d-none");
 
-        const email = document.getElementById("email").value.trim();
-        const password = document.getElementById("password").value.trim();
+        const email = document.getElementById(keywords.EMAIL).value.trim();
+        const password = document.getElementById(keywords.PASSWORD).value.trim();
 
         const loginPayload = { email, password };
 
         try {
-            const data = await apiPost("/users/login", loginPayload);
-            localStorage.setItem("token", data.access_token);
+            const data = await apiPost(ROUTES.LOGIN, loginPayload);
+            localStorage.setItem("acces_token", data.access_token);
             window.location.href = "dashboard.html";
 
         } catch (err) {
