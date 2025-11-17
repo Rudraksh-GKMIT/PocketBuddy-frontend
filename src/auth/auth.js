@@ -1,14 +1,12 @@
 // AUTH.JS — Handles Authentication & Role-Based Access
-
 import { STORAGE_KEYS } from "../constant/keys.js";
-
+import { ROLES } from "../constant/label.js";
 
 // 1. Check if user is logged in
 export function isLoggedIn() {
     const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
     return token !== null && token !== "";
 }
-
 
 // 2. Redirect if NOT logged in
 export function protectPage() {
@@ -17,13 +15,11 @@ export function protectPage() {
     }
 }
 
-
 // 3. Logout user
 export function logout() {
     localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
     window.location.href = "index.html";
 }
-
 
 // 4. Decode JWT (header.payload.signature)
 function parseJwt(token) {
@@ -36,7 +32,6 @@ function parseJwt(token) {
         return null;
     }
 }
-
 
 // 5. Get current logged-in user
 export function getCurrentUser() {
@@ -54,7 +49,7 @@ export function renderNavbar() {
 
     if (!nav || !user) return;
 
-    if (user.role === "admin") {
+    if (user.role === ROLES.ADMIN) {
         nav.innerHTML = `
             <a href="dashboard.html" class="btn btn-light me-2">Dashboard</a>
             <a href="add-expense.html" class="btn btn-light me-2">Add Expense</a>
@@ -79,7 +74,6 @@ export function renderNavbar() {
     const btn = document.getElementById("logoutBtn");
     if (btn) btn.addEventListener("click", logout);
 }
-
 
 // 7. Auto-render navbar on page load
 document.addEventListener("DOMContentLoaded", renderNavbar);

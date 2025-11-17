@@ -34,34 +34,26 @@ export async function apiPost(url, body) {
     return res.json();
 }
 
-// PUT Request
-export async function apiPut(url, body) {
+async function apiRequest(method, url, body = null) {
     const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
 
-    const res = await fetch(API_BASE + url, {
-        method: "PUT",
+    const options = {
+        method,
         headers: {
             "Content-Type": "application/json",
             "Authorization": token ? "Bearer " + token : ""
-        },
-        body: JSON.stringify(body)
-    });
-
-    if (!res.ok) throw new Error(await res.text() || "PUT Request Failed");
-    return res.json();
-}
-
-// DELETE Request
-export async function apiDelete(url) {
-    const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
-
-    const res = await fetch(API_BASE + url, {
-        method: "DELETE",
-        headers: {
-            "Authorization": token ? "Bearer " + token : ""
         }
-    });
+    };
 
-    if (!res.ok) throw new Error(await res.text() || "DELETE Request Failed");
+    if (body) {
+        options.body = JSON.stringify(body);
+    }
+
+    const res = await fetch(API_BASE + url, options);
+
+    if (!res.ok) throw new Error(await res.text() || `${method} Request Failed`);
     return res.json();
 }
+
+export const apiPut = (url, body) => apiRequest("PUT", url, body);
+export const apiDelete = (url) => apiRequest("DELETE", url);
