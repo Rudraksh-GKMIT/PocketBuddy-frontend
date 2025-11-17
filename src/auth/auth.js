@@ -46,3 +46,40 @@ export function getCurrentUser() {
     return parseJwt(raw);
 }
 
+
+// 6. Render navbar based on user role
+export function renderNavbar() {
+    const user = getCurrentUser();
+    const nav = document.getElementById("navLinks");
+
+    if (!nav || !user) return;
+
+    if (user.role === "admin") {
+        nav.innerHTML = `
+            <a href="dashboard.html" class="btn btn-light me-2">Dashboard</a>
+            <a href="add-expense.html" class="btn btn-light me-2">Add Expense</a>
+            <a href="expenses.html" class="btn btn-light me-2">My Expenses</a>
+
+            <a href="admin-members.html" class="btn btn-warning me-2">Members</a>
+            <a href="family-summary.html" class="btn btn-warning me-2">Family Summary</a>
+            <a href="family-expenses.html" class="btn btn-warning me-2">All Expenses</a>
+
+            <button id="logoutBtn" class="btn btn-danger">Logout</button>
+        `;
+    } else {
+        nav.innerHTML = `
+            <a href="dashboard.html" class="btn btn-light me-2">Dashboard</a>
+            <a href="add-expense.html" class="btn btn-light me-2">Add Expense</a>
+            <a href="expenses.html" class="btn btn-light me-2">My Expenses</a>
+            <button id="logoutBtn" class="btn btn-danger">Logout</button>
+        `;
+    }
+
+    // Attach logout handler
+    const btn = document.getElementById("logoutBtn");
+    if (btn) btn.addEventListener("click", logout);
+}
+
+
+// 7. Auto-render navbar on page load
+document.addEventListener("DOMContentLoaded", renderNavbar);
