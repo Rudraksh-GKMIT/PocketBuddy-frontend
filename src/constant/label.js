@@ -6,7 +6,9 @@ export const UI_TEXTS = {
     }
     
 };
-export const ROUTES = {
-    EMAIL : "email",
-    PASSWORD : "password"
-}
+export const keywords = {
+    EMAIL: "email",
+    PASSWORD: "password",
+    LOGIN_FORM: "loginForm",
+    ERROR_BOX: "errorBox",
+};

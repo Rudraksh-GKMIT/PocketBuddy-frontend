@@ -1,10 +1,10 @@
 import { ROUTES } from "../../constant/api_path.js";
-import { UI_TEXTS } from "../../constant/label.js";
+import { UI_TEXTS, keywords } from "../../constant/label.js";
 import { isLoggedIn } from "../../auth/auth.js";
+import { STORAGE_KEYS } from "../../constant/keys.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    // Load static text from content.js
     document.getElementById("loginTitle").innerText = UI_TEXTS.login.title;
     document.getElementById("noAccountText").innerText = UI_TEXTS.login.noAccount + " ";
     document.getElementById("registerText").innerText = UI_TEXTS.login.register;
@@ -14,8 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
-    const form = document.getElementById("loginForm");
-    const errorBox = document.getElementById("errorBox");
+    const form = document.getElementById(keywords.LOGIN_FORM);
+    const errorBox = document.getElementById(keywords.ERROR_BOX);
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         try {
             const data = await apiPost(ROUTES.LOGIN, loginPayload);
-            localStorage.setItem("acces_token", data.access_token);
+            localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, data.access_token);
             window.location.href = "dashboard.html";
 
         } catch (err) {
