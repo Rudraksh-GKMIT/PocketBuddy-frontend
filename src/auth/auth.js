@@ -9,3 +9,18 @@ export function isLoggedIn() {
     return token !== null && token !== "";
 }
 
+
+// 2. Redirect if NOT logged in
+export function protectPage() {
+    if (!isLoggedIn()) {
+        window.location.href = "index.html";
+    }
+}
+
+
+// 3. Logout user
+export function logout() {
+    localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
+    window.location.href = "index.html";
+}
+
