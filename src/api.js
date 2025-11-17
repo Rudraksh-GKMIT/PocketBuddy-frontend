@@ -33,3 +33,35 @@ export async function apiPost(url, body) {
     if (!res.ok) throw new Error(await res.text() || "POST Request Failed");
     return res.json();
 }
+
+// PUT Request
+export async function apiPut(url, body) {
+    const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+
+    const res = await fetch(API_BASE + url, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": token ? "Bearer " + token : ""
+        },
+        body: JSON.stringify(body)
+    });
+
+    if (!res.ok) throw new Error(await res.text() || "PUT Request Failed");
+    return res.json();
+}
+
+// DELETE Request
+export async function apiDelete(url) {
+    const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+
+    const res = await fetch(API_BASE + url, {
+        method: "DELETE",
+        headers: {
+            "Authorization": token ? "Bearer " + token : ""
+        }
+    });
+
+    if (!res.ok) throw new Error(await res.text() || "DELETE Request Failed");
+    return res.json();
+}
