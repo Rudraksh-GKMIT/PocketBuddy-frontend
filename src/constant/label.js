@@ -3,8 +3,11 @@ export const UI_TEXTS = {
         title: "Login",
         noAccount: "Don't have an account?",
         register: "Register"
+    },
+    register: {
+        title: "Register as Admin",
+        HasAccount:"Already have an account?"
     }
-    
 };
 export const keywords = {
     NAME : "name",
