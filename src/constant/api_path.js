@@ -1,34 +1,34 @@
 export const ROUTES = {
     USERS: {
-        BASE: "/users",
-        GET_ALL: "/users/",
-        REGISTER: "/users/register",
-        LOGIN: "/users/login",
+        BASE: "/api/users",
+        GET_ALL: "/api/users/",
+        REGISTER: "/api/users/register",
+        LOGIN: "/api/users/login",
     },
 
     ADMIN: {
-        BASE: "/admin",
-        GET_MEMBERS: "/admin/members/family",
-        ADD_MEMBER: "/admin/members",
-        EDIT_MEMBER: (id) => `/admin/members/${id}`,
-        DELETE_MEMBER: (id) => `/admin/members/${id}`,
+        BASE: "/api/admin",
+        GET_MEMBERS: "/api/admin/members/family",
+        ADD_MEMBER: "/api/admin/members",
+        EDIT_MEMBER: (id) => `/api/admin/members/${id}`,
+        DELETE_MEMBER: (id) => `/api/admin/members/${id}`,
     },
 
     TRANSACTION: {
-        BASE: "/transaction",
-        MY: "/transaction/me",
-        ADD: "/transaction",
-        UPDATE: (id) => `/transaction/${id}`,
-        DELETE: (id) => `/transaction/${id}`,
-        FAMILY: "/transaction/family",
-        BY_TYPE: (type) => `/transaction/type/${type}`,
+        BASE: "/api/transaction",
+        MY: "/api/transaction/me",
+        ADD: "/api/transaction",
+        UPDATE: (id) => `/api/transaction/${id}`,
+        DELETE: (id) => `/api/transaction/${id}`,
+        FAMILY: "/api/transaction/family",
+        BY_TYPE: (type) => `/api/transaction/type/${type}`,
     },
 
     SUMMARY: {
-        MY: "/transaction/summary/my",
-        FAMILY: "/transaction/summary/family",
-        MONTHLY_CURRENT: "/transaction/summary/monthly/current",
-        BY_TYPE: "/transaction/summary/type",
-        MONTHLY: "/transaction/summary/monthly"
+        MY: "/api/transaction/summary/my",
+        FAMILY: "/api/transaction/summary/family",
+        MONTHLY_CURRENT: "/api/transaction/summary/monthly/current",
+        BY_TYPE: "/api/transaction/summary/type",
+        MONTHLY: "/api/transaction/summary/monthly"
     }
 };

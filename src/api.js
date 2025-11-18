@@ -1,5 +1,6 @@
 import { STORAGE_KEYS } from "./constant/keys.js";
-import { API_BASE } from "./constant/api_path.js";
+import { ROUTES } from "./constant/api_path.js";
+const API_BASE = "http://127.0.0.1:8000";
 
 async function apiRequest(method, url, body = null) {
     const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
