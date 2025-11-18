@@ -2,6 +2,7 @@ import { ROUTES } from "../../constant/api_path.js";
 import { UI_TEXTS, keywords } from "../../constant/label.js";
 import { isLoggedIn } from "../../auth/auth.js";
 import { STORAGE_KEYS } from "../../constant/keys.js";
+import { apiPost } from "../../api.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
