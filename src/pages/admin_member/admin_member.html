@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Member Management - Family Expense Tracker</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+        /* Toast should always appear above modals */
+        .toast-container {
+            z-index: 20000 !important;
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="../dashboard/dashboard.html">
+                Family Expense Tracker
+            </a>
+            <div id="navLinks"></div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Manage Family Members</h2>
+
+        <!-- (Not used anymore, but kept for safety) -->
+        <div id="errorBox" class="alert alert-danger d-none"></div>
+
+        <!-- ADD MEMBER BUTTON -->
+        <div class="text-end mb-3">
+            <button
+                class="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#addModal">
+                + Add Member
+            </button>
+        </div>
+
+        <!-- MEMBER TABLE -->
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <table class="table table-bordered text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="memberTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===============================
+         ADD MEMBER MODAL
+    ================================ -->
+    <div class="modal fade" id="addModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Member</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form id="addMemberForm">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Name</label>
+                            <input id="addName" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Email</label>
+                            <input id="addEmail" type="email" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Password</label>
+                            <input id="addPassword" type="password" class="form-control" required>
+                        </div>
+
+                        <button class="btn btn-primary w-100">Add Member</button>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ===============================
+         EDIT MEMBER MODAL
+    ================================ -->
+    <div class="modal fade" id="editModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Member</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <form id="editMemberForm">
+
+                        <input type="hidden" id="editId">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Name</label>
+                            <input id="editName" class="form-control">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Email</label>
+                            <input id="editEmail" type="email" class="form-control">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">New Password</label>
+                            <input id="editPassword" type="password" class="form-control">
+                        </div>
+
+                        <button class="btn btn-warning w-100">Update Member</button>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ===============================
+         DELETE CONFIRM MODAL
+    ================================ -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">Confirm Delete</h5>
+                    <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body text-center">
+                    <p class="fs-5 mb-0">Are you sure you want to delete this member?</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button id="confirmDeleteBtn" class="btn btn-danger">Delete</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ===============================
+         SUCCESS TOAST
+    ================================ -->
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div id="successToast" class="toast text-bg-success border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body" id="successToastMessage">Success!</div>
+                <button type="button"
+                        class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===============================
+         ERROR TOAST (IMPORTANT)
+    ================================ -->
+    <div class="toast-container position-fixed top-0 end-0 p-3">
+        <div id="errorToast" class="toast text-bg-danger border-0" role="alert">
+            <div class="d-flex">
+                <div class="toast-body" id="errorToastMessage">Error!</div>
+                <button type="button"
+                        class="btn-close btn-close-white me-2 m-auto"
+                        data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Modules -->
+    <script type="module" src="../../api.js"></script>
+    <script type="module" src="../../auth/auth.js"></script>
+    <script type="module" src="./admin_member.js"></script>
+
+</body>
+</html>
