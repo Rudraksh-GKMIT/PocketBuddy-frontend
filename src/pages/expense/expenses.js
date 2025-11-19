@@ -67,6 +67,21 @@ document.addEventListener("DOMContentLoaded", async () => {
             amount: parseFloat(document.getElementById("editAmount").value),
             description: document.getElementById("editDescription").value
         };
+        
+        if (!updatedData.type || !updatedData.amount || !updatedData.description|| updatedData.amount <= 0 ) {
+            return showError(errorBox,"Please enter all required fields");
+        }
+
+        if (updatedData.amount <= 0)
+            return showError(errorBox,"Amount must be a valid number");
+
+        if (updatedData.amount.toString().length > 10) {
+            return showError(errorBox,"Amount cannot exceed 10 digits.");
+        }
+
+        if (updatedData.description.length > 200) {
+            return showError(errorBox,"Description cannot exceed 200 characters.");
+        }
 
         try {
             await apiPut(ROUTES.TRANSACTION.UPDATE(expenseToEdit.id), updatedData);
