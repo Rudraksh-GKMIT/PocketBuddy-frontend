@@ -1,6 +1,6 @@
 import { protectPage, getCurrentUser, renderNavbar,formatDate } from "../../auth/auth.js";
 import { apiGet } from "../../api.js";
-import { ROUTES } from "../../constant/api_path.js";
+import { API_URL } from "../../constant/api_path.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let allExpenses = [];
 
     try {
-        const members = await apiGet(ROUTES.ADMIN.GET_MEMBERS);
+        const members = await apiGet(API_URL.ADMIN.GET_MEMBERS);
         members.forEach(m => {
             familyMembers[String(m.id)] = m.name;
         });
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         familyMembers[String(user.user_id)] = `${user.username} (You)`;
 
         // 2. CALL YOUR NEW API
-        const dashboard = await apiGet(ROUTES.SUMMARY.FAMILY_DASHBOARD);
+        const dashboard = await apiGet(API_URL.SUMMARY.FAMILY_DASHBOARD);
 
         // Update cards
         totalFamilySpentEl.innerText = `₹${dashboard.total_family_spent || 0}`;
@@ -47,8 +47,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         updateCategoryBreakdown(dashboard.type_summary);
 
         // 🔹 3. Load ALL FAMILY EXPENSES (you still need actual rows)
-        allExpenses = await apiGet(ROUTES.TRANSACTION.FAMILY);
-
+        allExpenses = await apiGet(API_URL.TRANSACTION.FAMILY);
+        allExpenses.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         renderTable(allExpenses);
 
         // Filter dropdown

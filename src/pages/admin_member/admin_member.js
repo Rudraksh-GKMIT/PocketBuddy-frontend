@@ -1,6 +1,6 @@
 // admin_member.js — Clean, Modern, Toast-Based Error Handling
 
-import { ROUTES } from "../../constant/api_path.js";
+import { API_URL } from "../../constant/api_path.js";
 import { apiGet, apiPost, apiPut, apiDelete } from "../../api.js";
 import { protectPage, getCurrentUser, renderNavbar } from "../../auth/auth.js";
 
@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     //-------------------------------------------------------
     async function loadMembers() {
         try {
-            const members = await apiGet(ROUTES.ADMIN.GET_MEMBERS);
+            const members = await apiGet(API_URL.ADMIN.GET_MEMBERS);
             renderTable(members);
         } catch (err) {
             showError("Failed to load members");
@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
 
         try {
-            await apiPost(ROUTES.ADMIN.ADD_MEMBER, payload);
+            await apiPost(API_URL.ADMIN.ADD_MEMBER, payload);
             showSuccess("Member added successfully");
             setTimeout(() => location.reload(), 1000);
 
@@ -189,12 +189,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const payload = {
             name: editName.value.trim(),
-            email: editEmail.value.trim(),
+            email: editEmail.value.trim().toLowerCase(),
             password: editPassword.value.trim() || null
         };
 
         try {
-            await apiPut(ROUTES.ADMIN.EDIT_MEMBER(id), payload);
+            await apiPut(API_URL.ADMIN.EDIT_MEMBER(id), payload);
             editModal.hide();
 
             showSuccess("Member updated");
@@ -215,7 +215,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.getElementById("confirmDeleteBtn").addEventListener("click", async () => {
         try {
-            await apiDelete(ROUTES.ADMIN.DELETE_MEMBER(deleteMemberId));
+            await apiDelete(API_URL.ADMIN.DELETE_MEMBER(deleteMemberId));
 
             deleteModal.hide();
             showSuccess("Member deleted");

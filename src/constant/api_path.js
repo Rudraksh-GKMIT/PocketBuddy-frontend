@@ -1,4 +1,4 @@
-export const ROUTES = {
+export const API_URL = {
     USERS: {
         BASE: "/users",
         GET_ALL: "/users/",
