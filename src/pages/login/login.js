@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("registerText").innerText = UI_TEXTS.login.register;
 
     if (isLoggedIn()) {
-        window.location.href = "/src/pages/dashboard/dashboard.html";
+        window.location.href = "../dashboard/dashboard.html";
         return;
     }
 

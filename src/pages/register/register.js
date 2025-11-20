@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Redirect if already logged in
     if (isLoggedIn()) {
-        window.location.href = "/src/pages/dashboard/dashboard.html";
+        window.location.href = "../dashboard/dashboard.html";
         return;
     }
     document.getElementById("registerTitle").innerText = UI_TEXTS.register.title;
@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const result = await apiPost(API_URL.USERS.REGISTER, payload);
 
             alert("Registration successful! Please login.");
-            window.location.href = "/src/pages/login/login.html";
+            window.location.href = "../login/login.html";
 
         } catch (err) {
             errorBox.classList.remove("d-none");
