@@ -65,7 +65,7 @@
     </div>
 
     <!-- EDIT MODAL -->
-    <div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal fade " id="editModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
 
@@ -76,10 +76,12 @@
 
                 <div class="modal-body">
 
+                    <div id="editErrorBox" class="alert alert-danger d-none"></div>
+
                     <form id="editForm">
 
                         <div class="mb-3">
-                            <label class="form-label">Category</label>
+                            <label class="form-label">Category<span class="text-danger">*</span></label>
                             <select class="form-select" id="editType">
                                 <option value="food">Food</option>
                                 <option value="travel">Travel</option>
@@ -91,12 +93,12 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Amount (₹)</label>
+                            <label class="form-label">Amount (₹)<span class="text-danger">*</span></label>
                             <input id="editAmount" type="number" class="form-control">
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Description</label>
+                            <label class="form-label">Description<span class="text-danger">*</span></label>
                             <textarea id="editDescription" class="form-control"></textarea>
                         </div>
 

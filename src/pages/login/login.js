@@ -1,4 +1,4 @@
-import { ROUTES } from "../../constant/api_path.js";
+import { API_URL } from "../../constant/api_path.js";
 import { UI_TEXTS, keywords } from "../../constant/label.js";
 import { isLoggedIn } from "../../auth/auth.js";
 import { STORAGE_KEYS } from "../../constant/keys.js";
@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("registerText").innerText = UI_TEXTS.login.register;
 
     if (isLoggedIn()) {
-        window.location.href = "dashboard.html";
+        window.location.href = "/src/pages/dashboard/dashboard.html";
         return;
     }
 
@@ -29,9 +29,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const loginPayload = { email, password };
 
         try {
-            const data = await apiPost(ROUTES.USERS.LOGIN, loginPayload);
+            const data = await apiPost(API_URL.USERS.LOGIN, loginPayload);
             localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, data.access_token);
-            window.location.href = "dashboard.html";
+            window.location.href = "/src/pages/dashboard/dashboard.html";
 
         } catch (err) {
             errorBox.classList.remove("d-none");
