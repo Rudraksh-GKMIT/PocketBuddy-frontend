@@ -2,6 +2,7 @@ import { ROUTES } from "../../constant/api_path.js";
 import { UI_TEXTS, keywords } from "../../constant/label.js";
 import { isLoggedIn } from "../../auth/auth.js";
 import { STORAGE_KEYS } from "../../constant/keys.js";
+import { apiPost } from "../../api.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -28,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const loginPayload = { email, password };
 
         try {
-            const data = await apiPost(ROUTES.LOGIN, loginPayload);
+            const data = await apiPost(ROUTES.USERS.LOGIN, loginPayload);
             localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, data.access_token);
             window.location.href = "dashboard.html";
 
