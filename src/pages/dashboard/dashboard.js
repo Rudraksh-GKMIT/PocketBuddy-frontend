@@ -1,6 +1,6 @@
 import { isLoggedIn, getCurrentUser, renderNavbar } from "../../auth/auth.js";
 import { apiGet } from "../../api.js";
-import { ROUTES } from "../../constant/api_path.js";
+import { API_URL } from "../../constant/api_path.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     setText("welcomeText", `Welcome, ${user.username}!`);
 
     try {
-        const summary = await apiGet(ROUTES.SUMMARY.DASHBOARD);
+        const summary = await apiGet(API_URL.SUMMARY.DASHBOARD);
 
         // MULTIPLE TOP CATEGORIES
         const top = summary.top_categories;

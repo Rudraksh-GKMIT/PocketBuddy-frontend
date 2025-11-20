@@ -1,14 +1,11 @@
 // admin_member.js — Clean, Modern, Toast-Based Error Handling
 
-import { ROUTES } from "../../constant/api_path.js";
+import { API_URL } from "../../constant/api_path.js";
 import { apiGet, apiPost, apiPut, apiDelete } from "../../api.js";
 import { protectPage, getCurrentUser, renderNavbar } from "../../auth/auth.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    //-------------------------------------------------------
-    // AUTH + NAVBAR
-    //-------------------------------------------------------
     protectPage();
     renderNavbar();
 
@@ -19,9 +16,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    //-------------------------------------------------------
-    // DOM ELEMENTS
-    //-------------------------------------------------------
     const tableBody = document.getElementById("memberTableBody");
 
     // Add form
@@ -90,7 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     //-------------------------------------------------------
     async function loadMembers() {
         try {
-            const members = await apiGet(ROUTES.ADMIN.GET_MEMBERS);
+            const members = await apiGet(API_URL.ADMIN.GET_MEMBERS);
             renderTable(members);
         } catch (err) {
             showError("Failed to load members");
@@ -145,9 +139,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             password: addPassword.value.trim(),
             family_id: user.family_id
         };
-
+        const errors = validateRegisterForm(payload);
+        if (errors.length > 0) {
+            errorBox.classList.remove("d-none");
+            errorBox.innerHTML = errors.join("<br>");
+            return;
+        }
         try {
-            await apiPost(ROUTES.ADMIN.ADD_MEMBER, payload);
+            await apiPost(API_URL.ADMIN.ADD_MEMBER, payload);
             showSuccess("Member added successfully");
             setTimeout(() => location.reload(), 1000);
 
@@ -189,12 +188,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const payload = {
             name: editName.value.trim(),
-            email: editEmail.value.trim(),
+            email: editEmail.value.trim().toLowerCase(),
             password: editPassword.value.trim() || null
         };
 
         try {
-            await apiPut(ROUTES.ADMIN.EDIT_MEMBER(id), payload);
+            await apiPut(API_URL.ADMIN.EDIT_MEMBER(id), payload);
             editModal.hide();
 
             showSuccess("Member updated");
@@ -215,7 +214,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     document.getElementById("confirmDeleteBtn").addEventListener("click", async () => {
         try {
-            await apiDelete(ROUTES.ADMIN.DELETE_MEMBER(deleteMemberId));
+            await apiDelete(API_URL.ADMIN.DELETE_MEMBER(deleteMemberId));
 
             deleteModal.hide();
             showSuccess("Member deleted");
@@ -227,8 +226,36 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    //-------------------------------------------------------
+    function validateRegisterForm(payload) {
+        const errors = [];
+
+        if (!payload.name) {
+            errors.push("Your name is required.");
+        }
+
+        if (!payload.email) {
+            errors.push("Email is required.");
+        } else {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+            if (!emailRegex.test(payload.email)) {
+                errors.push("Enter a valid email address.");
+            }
+            payload.email = payload.email.toLowerCase();
+        }
+
+        if (!payload.password) {
+            errors.push("Password is required.");
+        } else {
+            const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+            if (!passRegex.test(payload.password)) {
+                errors.push(
+                    "Password must have at least 6 characters, include uppercase, lowercase, number, and special character."
+                );
+            }
+        }
+
+        return errors;
+    }
     // INITIAL LOAD
-    //-------------------------------------------------------
     loadMembers();
 });

@@ -1,6 +1,6 @@
 // expenses.js — Rewritten & Improved
 
-import { ROUTES } from "../../constant/api_path.js";
+import { API_URL } from "../../constant/api_path.js";
 import { apiGet, apiDelete, apiPut } from "../../api.js";
 import { protectPage, renderNavbar } from "../../auth/auth.js";
 
@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const saveEditBtn = document.getElementById("saveEditBtn");
     const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+    const editErrorBox = document.getElementById("editErrorBox");
 
     // Toast
     const toastEl = document.getElementById("successToast");
@@ -28,8 +29,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     // LOAD EXPENSES
     // --------------------------------------------
     try {
-        const expenses = await apiGet(ROUTES.TRANSACTION.MY);
-
+        const expenses = await apiGet(API_URL.TRANSACTION.MY);
+        expenses.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         if (!expenses.length) {
             renderNoData(tableBody);
         } else {
@@ -46,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // --------------------------------------------
     confirmDeleteBtn.addEventListener("click", async () => {
         try {
-            await apiDelete(ROUTES.TRANSACTION.DELETE(expenseToDelete));
+            await apiDelete(API_URL.TRANSACTION.DELETE(expenseToDelete));
 
             deleteModal.hide();
             showSuccess("Expense deleted!");
@@ -62,24 +63,40 @@ document.addEventListener("DOMContentLoaded", async () => {
     // SAVE EDIT BUTTON
     // --------------------------------------------
     saveEditBtn.addEventListener("click", async () => {
+        hideEditError();
+
         const updatedData = {
             type: document.getElementById("editType").value,
             amount: parseFloat(document.getElementById("editAmount").value),
-            description: document.getElementById("editDescription").value
+            description: document.getElementById("editDescription").value.trim()
         };
 
-        try {
-            await apiPut(ROUTES.TRANSACTION.UPDATE(expenseToEdit.id), updatedData);
+        if (!updatedData.type || !updatedData.amount || !updatedData.description) {
+            return showEditError("Please enter all required fields.");
+        }
 
+        if (updatedData.amount <= 0) {
+            return showEditError("Amount must be a positive number.");
+        }
+
+        if (updatedData.amount.toString().length > 10) {
+            return showEditError("Amount cannot exceed 10 digits.");
+        }
+
+        if (updatedData.description.length > 200) {
+            return showEditError("Description cannot exceed 200 characters.");
+        }
+
+        try {
+            await apiPut(API_URL.TRANSACTION.UPDATE(expenseToEdit.id), updatedData);
             editModal.hide();
             showSuccess("Expense updated!");
-
             setTimeout(() => location.reload(), 1200);
-
         } catch (err) {
-            showError(errorBox, "Failed to update expense.");
+            showEditError("Failed to update expense.");
         }
     });
+
 
     // --------------------------------------------
     // UTILITY FUNCTIONS
@@ -144,4 +161,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         const d = new Date(dateString.replace(" ", "T"));
         return isNaN(d) ? "-" : d.toLocaleDateString();
     }
+    function showEditError(msg) {
+        editErrorBox.classList.remove("d-none");
+        editErrorBox.innerText = msg;
+    }
+
+    function hideEditError() {
+        editErrorBox.classList.add("d-none");
+        editErrorBox.innerText = "";
+    }
+
 });

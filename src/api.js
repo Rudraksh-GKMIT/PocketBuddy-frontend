@@ -1,6 +1,5 @@
-import { STORAGE_KEYS } from "./constant/keys.js";
-import { ROUTES } from "./constant/api_path.js";
-const API_BASE = "http://127.0.0.1:8000";
+import { STORAGE_KEYS,API_BASE } from "./constant/keys.js";
+
 
 async function apiRequest(method, url, body = null) {
     const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
@@ -21,9 +20,15 @@ async function apiRequest(method, url, body = null) {
         const res = await fetch(API_BASE + url, options);
 
         if (!res.ok) {
-            const msg = await res.text();
-            throw new Error(msg || `${method} Request Failed`);
+            let errorJson;
+            try {
+                errorJson = await res.json(); // Parse JSON error
+            } catch {
+                errorJson = { detail: await res.text() }; // Fallback to text
+            }
+            throw errorJson; // THROW CLEAN JSON OBJECT 
         }
+
 
         return await res.json();
 

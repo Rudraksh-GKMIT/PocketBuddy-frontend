@@ -10,6 +10,8 @@
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
         rel="stylesheet"
     >
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0d6efd">
 
     <style>
         /* Toast should always appear above modals */
@@ -70,11 +72,9 @@
         </div>
     </div>
 
-    <!-- ===============================
-         ADD MEMBER MODAL
-    ================================ -->
+    <!-- ADD MEMBER MODAL-->
     <div class="modal fade" id="addModal" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
 
                 <div class="modal-header">
@@ -86,17 +86,17 @@
                     <form id="addMemberForm">
 
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Name</label>
+                            <label class="form-label fw-bold">Name<span class="text-danger">*</span></label>
                             <input id="addName" class="form-control" required>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Email</label>
+                            <label class="form-label fw-bold">Email<span class="text-danger">*</span></label>
                             <input id="addEmail" type="email" class="form-control" required>
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-bold">Password</label>
+                            <label class="form-label fw-bold">Password<span class="text-danger">*</span></label>
                             <input id="addPassword" type="password" class="form-control" required>
                         </div>
 
@@ -112,8 +112,8 @@
     <!-- ===============================
          EDIT MEMBER MODAL
     ================================ -->
-    <div class="modal fade" id="editModal" tabindex="-1">
-        <div class="modal-dialog">
+    <div class="modal fade " id="editModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
 
                 <div class="modal-header">
@@ -150,9 +150,7 @@
         </div>
     </div>
 
-    <!-- ===============================
-         DELETE CONFIRM MODAL
-    ================================ -->
+    <!-- DELETE CONFIRM MODAL -->
     <div class="modal fade" id="deleteConfirmModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -175,9 +173,7 @@
         </div>
     </div>
 
-    <!-- ===============================
-         SUCCESS TOAST
-    ================================ -->
+    <!-- SUCCESS TOAST -->
     <div class="toast-container position-fixed top-0 end-0 p-3">
         <div id="successToast" class="toast text-bg-success border-0" role="alert">
             <div class="d-flex">
@@ -189,9 +185,7 @@
         </div>
     </div>
 
-    <!-- ===============================
-         ERROR TOAST (IMPORTANT)
-    ================================ -->
+    <!-- ERROR TOAST (IMPORTANT)-->
     <div class="toast-container position-fixed top-0 end-0 p-3">
         <div id="errorToast" class="toast text-bg-danger border-0" role="alert">
             <div class="d-flex">
@@ -210,6 +204,14 @@
     <script type="module" src="../../api.js"></script>
     <script type="module" src="../../auth/auth.js"></script>
     <script type="module" src="./admin_member.js"></script>
+    <script>
+        if ("serviceWorker" in navigator) {
+        navigator.serviceWorker
+            .register("/service-worker.js")
+            .catch(err => console.log("SW registration failed", err));
+        }
+        </script>
+
 
 </body>
 </html>

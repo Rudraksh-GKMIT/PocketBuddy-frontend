@@ -1,7 +1,7 @@
 import { keywords, UI_TEXTS } from "../../constant/label.js";
 import { isLoggedIn } from "../../auth/auth.js";
 import { apiPost } from "../../api.js";
-import { ROUTES } from "../../constant/api_path.js";
+import { API_URL } from "../../constant/api_path.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -30,17 +30,58 @@ document.addEventListener("DOMContentLoaded", () => {
             email: document.getElementById(keywords.EMAIL).value.trim(),
             password: document.getElementById(keywords.PASSWORD).value.trim()
         };
-
+        const errors = validateRegisterForm(payload);
+        if (errors.length > 0) {
+            errorBox.classList.remove("d-none");
+            errorBox.innerHTML = errors.join("<br>");
+            return;
+        }
         try {
             // Use constant API route
-            const result = await apiPost(ROUTES.USERS.REGISTER, payload);
+            const result = await apiPost(API_URL.USERS.REGISTER, payload);
 
             alert("Registration successful! Please login.");
             window.location.href = "../login/login.html";
 
         } catch (err) {
             errorBox.classList.remove("d-none");
-            errorBox.innerText = "Registration failed. Email may already exist.";
+            errorBox.innerHTML = err.message || "Registration failed.";
+
         }
+        
     });
 });
+function validateRegisterForm(payload) {
+    const errors = [];
+
+    if (!payload.family_name) {
+        errors.push("Family name is required.");
+    }
+
+    if (!payload.name) {
+        errors.push("Your name is required.");
+    }
+
+    if (!payload.email) {
+        errors.push("Email is required.");
+    } else {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+        if (!emailRegex.test(payload.email)) {
+            errors.push("Enter a valid email address.");
+        }
+        payload.email = payload.email.toLowerCase();
+    }
+
+    if (!payload.password) {
+        errors.push("Password is required.");
+    } else {
+        const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/;
+        if (!passRegex.test(payload.password)) {
+            errors.push(
+                "Password must have at least 6 characters, include uppercase, lowercase, number, and special character."
+            );
+        }
+    }
+
+    return errors;
+}
