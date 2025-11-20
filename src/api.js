@@ -1,5 +1,5 @@
-import { STORAGE_KEYS } from "./constant/keys.js";
-const API_BASE = "http://51.20.109.219/api";
+import { STORAGE_KEYS,API_BASE } from "./constant/keys.js";
+
 
 async function apiRequest(method, url, body = null) {
     const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
