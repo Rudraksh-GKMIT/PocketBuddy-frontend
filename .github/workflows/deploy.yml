@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - dev
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -21,5 +22,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ubuntu/PocketBuddy-Backend
+            source .venv/bin/activate
             git pull origin dev
+            pip install -r requirements.txt
             pm2 restart fastapi
